@@ -1,0 +1,30 @@
+# dbt schema.yml
+
+version: 2
+sources:
+  - name: public
+    schema: public
+    tables:
+      - name: dw_medical
+
+models: 
+  - name: dw_medical_transformed
+    description: 'DW medical data transformed'
+    columns:
+      - name: message_id
+        description: "unique values"
+        data_type: 'number'
+        tests:
+          - not_null
+      - name: text
+        description: "message extracted"
+        tests:
+          - not_null
+      - name: date
+        description: "date the message was written"
+        tests:
+          - not_null
+      - name: channel
+        description: "channel name where the message was written"
+        tests:
+          - not_null

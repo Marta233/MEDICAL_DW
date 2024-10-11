@@ -21,7 +21,6 @@ class TelegramChannelScraper:
         self.api_id = os.getenv('API_ID')
         self.api_hash = os.getenv('API_HASH')
         self.phone_number = os.getenv('PHONE_NUMBER')
-        self.message_limit = int(os.getenv('MESSAGE_LIMIT', 3000))
         self.download_dir = os.getenv('DOWNLOAD_DIR', 'downloads')
         self.message_file = os.getenv('MESSAGE_FILE', 'telegram_messages.json')
 
