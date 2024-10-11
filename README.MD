@@ -36,13 +36,6 @@ my_project/
 ├── dbt_project.yml # DBT project configuration
 └── README.md # Project documentation
 
-
-Copy
-
-### Installation
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/Marta233/MEDICAL_DW.git
-   cd telegram-data-pipeline
-Set up a Python virtual environment (optional but recommended):
-bash
