@@ -4,6 +4,10 @@ import pandas as pd
 import shutil
 import psycopg2
 from datetime import datetime
+import logging
+
+# Set up logging configuration
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class YOLOv5Detector:
     def __init__(self, model_name='yolov5s', base_output_folder='./YOLO_output'):

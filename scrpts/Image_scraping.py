@@ -1,31 +1,26 @@
 import os
 import json
+import logging
 from telethon import TelegramClient
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.types import MessageMediaPhoto
 from dotenv import load_dotenv
 import logging
-
-# Load environment variables from .env file
 load_dotenv()
-
 # Set up logging
 logging.basicConfig(
-    filename='telegram_image_scraper.log',  # Log file name for images
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
+    filename='telegram_img_scraper.log',  # Log file name
+    level=logging.INFO,  # Log level (you can change this to DEBUG for more details)
+    format='%(asctime)s - %(levelname)s - %(message)s',  # Log format
+    datefmt='%Y-%m-%d %H:%M:%S'  # Log date format
 )
-
 class TelegramImageScraper:
     def __init__(self):
         self.api_id = os.getenv('API_ID')
         self.api_hash = os.getenv('API_HASH')
         self.phone_number = os.getenv('PHONE_NUMBER')
         self.download_dir = os.getenv('DOWNLOAD_DIR', 'downloads')  # Directory for downloaded images
-
         self.client = TelegramClient('session_name', self.api_id, self.api_hash)
-
         self._create_directory(self.download_dir)
 
     def _create_directory(self, directory):
@@ -37,13 +32,17 @@ class TelegramImageScraper:
         """Download media from a message if it contains a photo."""
         if message.media and isinstance(message.media, MessageMediaPhoto):
             photo_path = await message.download_media(file=self.download_dir)
-            return photo_path
+            if photo_path:
+                # Rename the file to include message ID
+                new_photo_path = os.path.join(self.download_dir, f"{message.id}.jpg")
+                os.rename(photo_path, new_photo_path)
+                logging.info(f"Downloaded image to {new_photo_path}")
+                return new_photo_path
         return None
 
     async def fetch_images_from_channel(self, channel):
         """Fetch images from a single Telegram channel and save them to the specified download directory."""
         print(f"Joining and fetching images from {channel}...")
-
         try:
             # Join the channel
             await self.client(JoinChannelRequest(channel))
