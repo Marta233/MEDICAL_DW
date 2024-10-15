@@ -1,30 +1,76 @@
-# dbt schema.yml
-
 version: 2
+
 sources:
   - name: public
     schema: public
     tables:
       - name: dw_medical
+        description: "Source table for raw medical messages"
+      - name: detections
+        description: "Source table for object detection results"
 
-models: 
-  - name: dw_medical_transformed
-    description: 'DW medical data transformed'
+models:
+  - name: med_dw_transformed
+    description: 'Transformed medical data'
     columns:
       - name: message_id
-        description: "unique values"
-        data_type: 'number'
-        tests:
-          - not_null
+        description: "Unique message ID"
       - name: text
-        description: "message extracted"
-        tests:
-          - not_null
+        description: "Extracted message text"
       - name: date
-        description: "date the message was written"
+        description: "Date of the message"
+      - name: channel
+        description: "Channel name where the message was written"
+
+  - name: detections_transformed
+    description: "Transformed object detection results"
+    columns:
+      - name: id
+        description: "Unique identifier for the detection"
+        tests:
+          - unique
+          - not_null
+      - name: img_name
+        description: "Name of the image file"
         tests:
           - not_null
-      - name: channel
-        description: "channel name where the message was written"
+      - name: name
+        description: "Detected object class"
+        tests:
+          - not_null
+      - name: confidence
+        description: "Confidence score of the detection"
+        tests:
+          - not_null
+      - name: xmin_coord
+        description: "X-coordinate of the top-left corner of the bounding box"
+        tests:
+          - not_null
+      - name: ymin
+        description: "Y-coordinate of the top-left corner of the bounding box"
+        tests:
+          - not_null
+      - name: xmax_coord
+        description: "X-coordinate of the bottom-right corner of the bounding box"
+        tests:
+          - not_null
+      - name: ymax
+        description: "Y-coordinate of the bottom-right corner of the bounding box"
+        tests:
+          - not_null
+      - name: image_path
+        description: "Path to the detected image"
+        tests:
+          - not_null
+      - name: detection_time
+        description: "Timestamp when the detection was performed"
+        tests:
+          - not_null
+      - name: detection_date
+        description: "Date extracted from the detection_time"
+        tests:
+          - not_null
+      - name: detection_month
+        description: "Month extracted from the detection_time"
         tests:
           - not_null
